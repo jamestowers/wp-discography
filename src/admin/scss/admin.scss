@@ -8,7 +8,7 @@ a{
 }
 table{
   tr{
-    &:nth-child(even){
+    &:nth-child(odd){
       background: $grey9;
     }
   }

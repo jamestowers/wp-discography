@@ -578,7 +578,7 @@
 a .dashicons {
   vertical-align: middle; }
 
-table tr:nth-child(even) {
+table tr:nth-child(odd) {
   background: #F9F9F9; }
 
 .hide {

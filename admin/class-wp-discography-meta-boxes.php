@@ -18,9 +18,9 @@ class Wp_Discography_Meta_Boxes {
     array(
       'name' => 'release-date',
       'label' => 'Release date',
-      'type' => 'date',
+      'type' => 'text',
       'field-class' => 'regular-text',
-      'description' => ''
+      'description' => 'Date must be in the following format: 2012-07-12 09:00 (time is optional)'
       ),
     array(
       'name' => 'lookup-id',
@@ -47,9 +47,9 @@ class Wp_Discography_Meta_Boxes {
     array(
       'name' => 'release-date',
       'label' => 'Release date',
-      'type' => 'date',
+      'type' => 'text',
       'field-class' => 'regular-text',
-      'description' => ''
+      'description' => 'Date must be in the following format: 2012-07-12 09:00 (time is optional)'
       ),
     array(
       'name' => 'lookup-id',
@@ -114,18 +114,18 @@ class Wp_Discography_Meta_Boxes {
   public function add_album_meta_boxes($post_type)
   {
     add_meta_box( 
-      $this->plugin_name . '_album_tracks_meta_box', 
-      esc_html__( 'Album tracks', $this->plugin_name ), 
-      array( &$this, 'render_album_tracks_metabox'),
+      $this->plugin_name . '_album_info_meta_box', 
+      esc_html__( 'Album info', $this->plugin_name ), 
+      array( &$this, 'render_album_info_metabox'),
       'album',
       'normal',
       'core'
     );
 
     add_meta_box( 
-      $this->plugin_name . '_album_info_meta_box', 
-      esc_html__( 'Album info', $this->plugin_name ), 
-      array( &$this, 'render_album_info_metabox'),
+      $this->plugin_name . '_album_tracks_meta_box', 
+      esc_html__( 'Album tracks', $this->plugin_name ), 
+      array( &$this, 'render_album_tracks_metabox'),
       'album',
       'normal',
       'core'
@@ -178,28 +178,41 @@ class Wp_Discography_Meta_Boxes {
   {
     $lookup_id = get_post_meta($post->ID, $this->meta_key . 'lookup-id', true);
     
-    $lookup_id = isset($lookup_id) ? $lookup_id : '';
+    //$lookup_id = isset($lookup_id) ? $lookup_id : '';
+    
+    if(!$lookup_id){
 
-    echo '<a id="fetchTracks" class="button-primary" href="https://itunes.apple.com/lookup?id=' . $lookup_id . '" data-lookup-id="' . $lookup_id . '" data-album-id="' . $post->ID . '" title="click to fetch album tracks from iTunes">Fetch album tracks from iTunes</a> <div class="spinner" style="float:none;width:auto;height:auto;padding:10px 0 10px 20px;"></div><p>&nbsp;</p>';
+      echo '<p>You need to add the iTunes Lookup ID and save this album in order to auto-fetch tracks from iTunes. Alternatively, <a href="' . get_settings('siteurl') . '/wp-admin/post-new.php?post_type=track">add tracks manually</a></p>';
+      echo '<a class="button-primary" disabled >Fetch album tracks from iTunes</a></p>';
 
-    $tracks = $this->get_album_tracks($post->ID);
-    echo '<div id="album-tracks" class="track-list"><table class="widefat">
-        <thead>
-          <th class="row-title">Track name</th>
-          <th>Preview</th>
-        </thead><tbody>';
-    foreach($tracks as $track){ ?>
-      
-      <tr valign="top">
-        <td scope="row"><?php echo $track->post_title;?> <a href="<?php echo get_edit_post_link($track->ID);?>">Edit</a></td>
-        <td>
-          <audio controls>
-            <source src="<?php echo get_post_meta($track->ID, $this->meta_key . 'preview-url', true);?>" type="audio/mp3">
-          </audio>
-        </td>
-      </tr>
-    <?php } 
-    echo '</tbody></table></div>';
+    }else{
+
+      echo '<a id="fetchTracks" class="button-primary" href="https://itunes.apple.com/lookup?id=' . $lookup_id . '" data-lookup-id="' . $lookup_id . '" data-album-id="' . $post->ID . '" title="click to fetch album tracks from iTunes">Fetch album tracks from iTunes</a> <div class="spinner" style="float:none;width:auto;height:auto;padding:10px 0 10px 20px;"></div><p>&nbsp;</p>';
+
+      $tracks = $this->get_album_tracks($post->ID);
+      echo '<div id="album-tracks" class="track-list"><table class="widefat">
+          <thead>
+            <th class="row-title">Track name</th>
+            <th>Preview</th>
+            <th>View on iTunes</th>
+          </thead><tbody>';
+      foreach($tracks as $track){ ?>
+        
+        <tr valign="top">
+          <td scope="row"><?php echo $track->post_title;?> - <a href="<?php echo get_edit_post_link($track->ID);?>"><span class="dashicons dashicons-edit"></span> Edit</a></td>
+          <td>
+            <audio controls>
+              <source src="<?php echo get_post_meta($track->ID, $this->meta_key . 'preview-url', true);?>" type="audio/mp3">
+            </audio>
+          </td>
+          <td>
+            <a href="<?php echo get_post_meta($track->ID, $this->meta_key . 'url', true);?>" target="_blank"><span class="dashicons dashicons-admin-links"></span></a>
+          </td>
+        </tr>
+      <?php } 
+      echo '</tbody></table></div>';
+
+    }
   }
 
   public function render_track_info_metabox( $post, $box ) { 
@@ -219,7 +232,7 @@ class Wp_Discography_Meta_Boxes {
   { 
     $btn_text = "Search for this " .  $post->post_type . " on iTunes"; ?>
 
-    <p class="description">Autofill fields below by fetching data from iTunes</p>
+    <p class="description">Autofill fields below by fetching data from iTunes (requires <?php echo $post->post_type;?> title first)</p>
 
     <a id="itunes-search-btn" class="button-primary" href="#" title="click to fetch listings from iTunes" data-entity="<?php echo $post->post_type;?>"><?php echo $btn_text;?></a> 
 
@@ -240,6 +253,7 @@ class Wp_Discography_Meta_Boxes {
       if($field['label']){
         echo '<label for="' . $field['name'] . '">' . $field['label'] . '</label><br />';
       }
+      
       switch($field['type']){
         
         case 'hidden' :
@@ -261,6 +275,9 @@ class Wp_Discography_Meta_Boxes {
         default :
           echo '<input type="text" name="' . $this->meta_key . $field['name'] . '" value="' . $current_value . '" placeholder="Enter ' . $field['label'] . '" class="' . $field['field-class'] . '" />';
           break;
+      }
+      if($field['description']){
+        echo '<p class="description">' . $field['description'] . '</p>';
       }
       echo '</p>';
     }
@@ -314,6 +331,7 @@ class Wp_Discography_Meta_Boxes {
           echo '<option value="' . $album->ID . '" ' . $selected . '>' . $album->post_title . '</option>';
         }?>
       </select>
+      <p><a href="<?php echo get_settings('siteurl');?>/wp-admin/post-new.php?post_type=album">Add new album</a></p>
     </div>
     <?php
   }
