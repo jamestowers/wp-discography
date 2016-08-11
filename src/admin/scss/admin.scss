@@ -1,0 +1,31 @@
+@import "../../node_modules/plyr/src/scss/plyr.scss";
+@import "../../variables";
+
+a{
+  .dashicons{
+    vertical-align: middle;
+  }
+}
+table{
+  tr{
+    &:nth-child(even){
+      background: $grey9;
+    }
+  }
+}
+.hide{
+  display: none;
+}
+#search-results{
+  margin: 40px 0;
+}
+.track-list{
+  .widefat{
+    td{
+      vertical-align: middle;
+      audio, video {
+        display: inherit;
+      }
+    }
+  }
+}

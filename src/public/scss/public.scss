@@ -1,0 +1,10 @@
+@import "../../node_modules/plyr/src/scss/plyr.scss";
+
+.plyr{
+  &.plyr--audio{
+    min-width: auto;
+    .plyr__controls{
+      background: transparent;
+    }
+  }
+}
