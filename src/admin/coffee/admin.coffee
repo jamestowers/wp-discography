@@ -101,7 +101,6 @@ class @DiscographyAdmin
       if data[key]
         if value is 'release-date'
           data[key] = data[key].replace(/T|Z/g,' ')
-          console.log data[key]
         $('input[name="wp-discography_' + value + '"]').val(data[key])
     
     fetchTracksLink = $('a#fetchTracks')
