@@ -10,10 +10,14 @@ this.DiscographyPublic = (function() {
   }
 
   DiscographyPublic.prototype.addEventListeners = function() {
-    return this.doc.ready(function() {
+    this.doc.ready(function() {
       return plyr.setup({
         controls: "play"
       });
+    });
+    return this.doc.on('click', '.toggle-lyrics', function() {
+      $(this).parents('li').toggleClass('expanded-lyrics');
+      return false;
     });
   };
 

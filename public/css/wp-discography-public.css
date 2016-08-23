@@ -225,7 +225,7 @@
     padding: 7px;
     border: 0;
     background: transparent;
-    border-radius: 3px;
+    border-radius: 0px;
     cursor: pointer;
     transition: background .3s ease, color .3s ease, opacity .3s ease;
     color: inherit; }
@@ -575,7 +575,13 @@
     top: 50%;
     transform: translateY(-50%); }
 
-.plyr.plyr--audio {
+.plyr.plyr--audio, .plyr.plyr--video {
   min-width: auto; }
-  .plyr.plyr--audio .plyr__controls {
+  .plyr.plyr--audio .plyr__controls, .plyr.plyr--video .plyr__controls {
     background: transparent; }
+    .plyr.plyr--audio .plyr__controls button:hover, .plyr.plyr--video .plyr__controls button:hover {
+      background: #000000; }
+      .plyr.plyr--audio .plyr__controls button:hover svg, .plyr.plyr--video .plyr__controls button:hover svg {
+        fill: #FFFFFF; }
+    .plyr.plyr--audio .plyr__controls button svg, .plyr.plyr--video .plyr__controls button svg {
+      fill: #000000; }

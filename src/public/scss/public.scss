@@ -1,10 +1,25 @@
 @import "../../node_modules/plyr/src/scss/plyr.scss";
 
+$black: #000000;
+$white: #FFFFFF;
+
 .plyr{
-  &.plyr--audio{
+  &.plyr--audio,
+  &.plyr--video{
     min-width: auto;
     .plyr__controls{
       background: transparent;
+      button{
+        &:hover{
+          background: $black;
+          svg{
+            fill: $white;
+          }
+        }
+        svg{
+          fill: $black;
+        }
+      }
     }
   }
 }
