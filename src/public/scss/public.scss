@@ -22,4 +22,23 @@ $white: #FFFFFF;
       }
     }
   }
+  &.plyr--video{
+    
+    .plyr__video-wrapper{
+      max-width: 800px;
+      max-height: 800px;
+    }
+    video{
+       max-width: 800px;
+      max-height: 800px;
+    }
+    .plyr__controls{
+      button{
+        background: $white;
+        svg{
+          fill: $black;
+        }
+      }
+    }
+  }
 }

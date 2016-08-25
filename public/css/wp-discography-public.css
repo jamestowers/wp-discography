@@ -585,3 +585,16 @@
         fill: #FFFFFF; }
     .plyr.plyr--audio .plyr__controls button svg, .plyr.plyr--video .plyr__controls button svg {
       fill: #000000; }
+
+.plyr.plyr--video .plyr__video-wrapper {
+  max-width: 800px;
+  max-height: 800px; }
+
+.plyr.plyr--video video {
+  max-width: 800px;
+  max-height: 800px; }
+
+.plyr.plyr--video .plyr__controls button {
+  background: #FFFFFF; }
+  .plyr.plyr--video .plyr__controls button svg {
+    fill: #000000; }
